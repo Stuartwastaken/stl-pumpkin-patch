@@ -11,13 +11,18 @@ import { Package } from "@/data/packages";
 
 interface PackageConfigurationProps {
   package: Package;
-  onConfigChange: (config: PackageConfig) => void;
+  onConfigChange: (config: PackageConfig, isValid: boolean) => void;
 }
 
 export interface PackageConfig {
   selectedCollection?: string;
-  deliveryDate?: string;
-  deliveryAddress: string;
+  deliveryDate: string;
+  deliveryAddress: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+  };
   specialRequests: string;
   contactInfo: {
     name: string;
@@ -32,11 +37,27 @@ export interface PackageConfig {
   };
 }
 
+export interface ValidationErrors {
+  deliveryDate?: string;
+  deliveryStreet?: string;
+  deliveryCity?: string;
+  deliveryState?: string;
+  deliveryZipCode?: string;
+  contactName?: string;
+  contactPhone?: string;
+  contactEmail?: string;
+}
+
 const PackageConfiguration = ({ package: pkg, onConfigChange }: PackageConfigurationProps) => {
   const [config, setConfig] = useState<PackageConfig>({
     selectedCollection: pkg.collections?.[0]?.id || "",
     deliveryDate: "",
-    deliveryAddress: "",
+    deliveryAddress: {
+      street: "",
+      city: "",
+      state: "",
+      zipCode: ""
+    },
     specialRequests: "",
     contactInfo: {
       name: "",
@@ -51,10 +72,138 @@ const PackageConfiguration = ({ package: pkg, onConfigChange }: PackageConfigura
     }
   });
 
+  const [errors, setErrors] = useState<ValidationErrors>({});
+  const [touched, setTouched] = useState<Set<string>>(new Set());
+
+  const validateField = (field: string, value: string): string | undefined => {
+    switch (field) {
+      case 'deliveryDate':
+        if (!value) return 'Delivery date is required';
+        const selectedDate = new Date(value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (selectedDate < today) return 'Delivery date cannot be in the past';
+        return undefined;
+      
+      case 'deliveryStreet':
+        if (!value.trim()) return 'Street address is required';
+        if (value.trim().length < 5) return 'Please provide a complete street address';
+        return undefined;
+      
+      case 'deliveryCity':
+        if (!value.trim()) return 'City is required';
+        if (value.trim().length < 2) return 'Please provide a valid city name';
+        return undefined;
+      
+      case 'deliveryState':
+        if (!value.trim()) return 'State is required';
+        if (value.trim().length < 2) return 'Please provide a valid state';
+        return undefined;
+      
+      case 'deliveryZipCode':
+        if (!value.trim()) return 'ZIP code is required';
+        const zipRegex = /^\d{5}(-\d{4})?$/;
+        if (!zipRegex.test(value.trim())) return 'Please provide a valid ZIP code (12345 or 12345-6789)';
+        return undefined;
+      
+      case 'contactName':
+        if (!value.trim()) return 'Name is required';
+        if (value.trim().length < 2) return 'Please provide your full name';
+        return undefined;
+      
+      case 'contactPhone':
+        if (!value.trim()) return 'Phone number is required';
+        const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+        const cleanPhone = value.replace(/[\s\-\(\)]/g, '');
+        if (!phoneRegex.test(cleanPhone) || cleanPhone.length < 10) {
+          return 'Please provide a valid phone number';
+        }
+        return undefined;
+      
+      case 'contactEmail':
+        if (value && value.trim()) {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(value)) return 'Please provide a valid email address';
+        }
+        return undefined;
+      
+      default:
+        return undefined;
+    }
+  };
+
+  const validateAllFields = (): boolean => {
+    const newErrors: ValidationErrors = {};
+    
+    newErrors.deliveryDate = validateField('deliveryDate', config.deliveryDate);
+    newErrors.deliveryStreet = validateField('deliveryStreet', config.deliveryAddress.street);
+    newErrors.deliveryCity = validateField('deliveryCity', config.deliveryAddress.city);
+    newErrors.deliveryState = validateField('deliveryState', config.deliveryAddress.state);
+    newErrors.deliveryZipCode = validateField('deliveryZipCode', config.deliveryAddress.zipCode);
+    newErrors.contactName = validateField('contactName', config.contactInfo.name);
+    newErrors.contactPhone = validateField('contactPhone', config.contactInfo.phone);
+    newErrors.contactEmail = validateField('contactEmail', config.contactInfo.email);
+    
+    // Remove undefined errors
+    Object.keys(newErrors).forEach(key => {
+      if (!newErrors[key as keyof ValidationErrors]) {
+        delete newErrors[key as keyof ValidationErrors];
+      }
+    });
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const updateConfig = (updates: Partial<PackageConfig>) => {
     const newConfig = { ...config, ...updates };
     setConfig(newConfig);
-    onConfigChange(newConfig);
+    
+    // Validate changed fields
+    Object.keys(updates).forEach(field => {
+      if (field === 'contactInfo' && updates.contactInfo) {
+        Object.keys(updates.contactInfo).forEach(subField => {
+          const fieldName = `contact${subField.charAt(0).toUpperCase() + subField.slice(1)}`;
+          const error = validateField(fieldName, updates.contactInfo![subField as keyof typeof updates.contactInfo]);
+          setErrors(prev => ({ ...prev, [fieldName]: error }));
+        });
+      } else if (field === 'deliveryAddress' && updates.deliveryAddress) {
+        Object.keys(updates.deliveryAddress).forEach(subField => {
+          const fieldName = `delivery${subField.charAt(0).toUpperCase() + subField.slice(1)}`;
+          const error = validateField(fieldName, updates.deliveryAddress![subField as keyof typeof updates.deliveryAddress]);
+          setErrors(prev => ({ ...prev, [fieldName]: error }));
+        });
+      } else if (field === 'deliveryDate') {
+        const error = validateField(field, updates[field] as string);
+        setErrors(prev => ({ ...prev, [field]: error }));
+      }
+    });
+    
+    // Check if form is valid and notify parent
+    const isValid = newConfig.deliveryDate && 
+                   newConfig.deliveryAddress.street.trim() && 
+                   newConfig.deliveryAddress.city.trim() && 
+                   newConfig.deliveryAddress.state.trim() && 
+                   newConfig.deliveryAddress.zipCode.trim() && 
+                   newConfig.contactInfo.name.trim() && 
+                   newConfig.contactInfo.phone.trim();
+    
+    onConfigChange(newConfig, !!isValid);
+  };
+
+  const handleFieldTouch = (fieldName: string) => {
+    setTouched(prev => new Set([...prev, fieldName]));
+  };
+
+  const isFormValid = (): boolean => {
+    return config.deliveryDate && 
+           config.deliveryAddress.street.trim() && 
+           config.deliveryAddress.city.trim() && 
+           config.deliveryAddress.state.trim() && 
+           config.deliveryAddress.zipCode.trim() && 
+           config.contactInfo.name.trim() && 
+           config.contactInfo.phone.trim() &&
+           Object.keys(errors).length === 0;
   };
 
   const updateCustomizations = (key: keyof PackageConfig['customizations'], value: number) => {
@@ -65,6 +214,11 @@ const PackageConfiguration = ({ package: pkg, onConfigChange }: PackageConfigura
   const updateContactInfo = (key: keyof PackageConfig['contactInfo'], value: string) => {
     const newContactInfo = { ...config.contactInfo, [key]: value };
     updateConfig({ contactInfo: newContactInfo });
+  };
+
+  const updateDeliveryAddress = (key: keyof PackageConfig['deliveryAddress'], value: string) => {
+    const newDeliveryAddress = { ...config.deliveryAddress, [key]: value };
+    updateConfig({ deliveryAddress: newDeliveryAddress });
   };
 
   const calculateExtraCost = () => {
@@ -242,28 +396,95 @@ const PackageConfiguration = ({ package: pkg, onConfigChange }: PackageConfigura
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="delivery-date">Preferred Delivery Date</Label>
+            <Label htmlFor="delivery-date" className="text-sm font-medium">
+              Preferred Delivery Date *
+            </Label>
             <Input 
               id="delivery-date"
               type="date"
               value={config.deliveryDate}
               onChange={(e) => updateConfig({ deliveryDate: e.target.value })}
+              onBlur={() => handleFieldTouch('deliveryDate')}
               min={new Date().toISOString().split('T')[0]}
+              className={errors.deliveryDate ? 'border-red-500' : ''}
+              required
             />
+            {errors.deliveryDate && touched.has('deliveryDate') && (
+              <p className="text-sm text-red-500">{errors.deliveryDate}</p>
+            )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="delivery-address" className="flex items-center gap-2">
+          <div className="space-y-4">
+            <Label className="flex items-center gap-2 text-sm font-medium">
               <MapPin className="w-4 h-4" />
-              Delivery Address
+              Delivery Address *
             </Label>
-            <Textarea 
-              id="delivery-address"
-              placeholder="Enter your full delivery address..."
-              value={config.deliveryAddress}
-              onChange={(e) => updateConfig({ deliveryAddress: e.target.value })}
-              rows={3}
-            />
+            
+            <div className="space-y-3">
+              {/* Street Address */}
+              <div>
+                <Input 
+                  id="delivery-street"
+                  placeholder="Street address (e.g., 123 Main St)"
+                  value={config.deliveryAddress.street}
+                  onChange={(e) => updateDeliveryAddress('street', e.target.value)}
+                  onBlur={() => handleFieldTouch('deliveryStreet')}
+                  className={errors.deliveryStreet ? 'border-red-500' : ''}
+                  required
+                />
+                {errors.deliveryStreet && touched.has('deliveryStreet') && (
+                  <p className="text-sm text-red-500 mt-1">{errors.deliveryStreet}</p>
+                )}
+              </div>
+
+              {/* City, State, ZIP */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <div>
+                  <Input 
+                    id="delivery-city"
+                    placeholder="City"
+                    value={config.deliveryAddress.city}
+                    onChange={(e) => updateDeliveryAddress('city', e.target.value)}
+                    onBlur={() => handleFieldTouch('deliveryCity')}
+                    className={errors.deliveryCity ? 'border-red-500' : ''}
+                    required
+                  />
+                  {errors.deliveryCity && touched.has('deliveryCity') && (
+                    <p className="text-sm text-red-500 mt-1">{errors.deliveryCity}</p>
+                  )}
+                </div>
+
+                <div>
+                  <Input 
+                    id="delivery-state"
+                    placeholder="State"
+                    value={config.deliveryAddress.state}
+                    onChange={(e) => updateDeliveryAddress('state', e.target.value)}
+                    onBlur={() => handleFieldTouch('deliveryState')}
+                    className={errors.deliveryState ? 'border-red-500' : ''}
+                    required
+                  />
+                  {errors.deliveryState && touched.has('deliveryState') && (
+                    <p className="text-sm text-red-500 mt-1">{errors.deliveryState}</p>
+                  )}
+                </div>
+
+                <div>
+                  <Input 
+                    id="delivery-zipcode"
+                    placeholder="ZIP Code"
+                    value={config.deliveryAddress.zipCode}
+                    onChange={(e) => updateDeliveryAddress('zipCode', e.target.value)}
+                    onBlur={() => handleFieldTouch('deliveryZipCode')}
+                    className={errors.deliveryZipCode ? 'border-red-500' : ''}
+                    required
+                  />
+                  {errors.deliveryZipCode && touched.has('deliveryZipCode') && (
+                    <p className="text-sm text-red-500 mt-1">{errors.deliveryZipCode}</p>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -277,36 +498,53 @@ const PackageConfiguration = ({ package: pkg, onConfigChange }: PackageConfigura
         <CardContent className="space-y-4">
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="contact-name">Full Name *</Label>
+              <Label htmlFor="contact-name" className="text-sm font-medium">Full Name *</Label>
               <Input 
                 id="contact-name"
                 placeholder="Your full name"
                 value={config.contactInfo.name}
                 onChange={(e) => updateContactInfo('name', e.target.value)}
+                onBlur={() => handleFieldTouch('contactName')}
+                className={errors.contactName ? 'border-red-500' : ''}
+                required
               />
+              {errors.contactName && touched.has('contactName') && (
+                <p className="text-sm text-red-500">{errors.contactName}</p>
+              )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="contact-phone">Phone Number *</Label>
+              <Label htmlFor="contact-phone" className="text-sm font-medium">Phone Number *</Label>
               <Input 
                 id="contact-phone"
                 type="tel"
                 placeholder="(555) 123-4567"
                 value={config.contactInfo.phone}
                 onChange={(e) => updateContactInfo('phone', e.target.value)}
+                onBlur={() => handleFieldTouch('contactPhone')}
+                className={errors.contactPhone ? 'border-red-500' : ''}
+                required
               />
+              {errors.contactPhone && touched.has('contactPhone') && (
+                <p className="text-sm text-red-500">{errors.contactPhone}</p>
+              )}
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="contact-email">Email Address</Label>
+            <Label htmlFor="contact-email" className="text-sm font-medium">Email Address (Optional)</Label>
             <Input 
               id="contact-email"
               type="email"
-              placeholder="your@email.com"
+              placeholder="your@email.com (optional - for order confirmation)"
               value={config.contactInfo.email}
               onChange={(e) => updateContactInfo('email', e.target.value)}
+              onBlur={() => handleFieldTouch('contactEmail')}
+              className={errors.contactEmail ? 'border-red-500' : ''}
             />
+            {errors.contactEmail && touched.has('contactEmail') && (
+              <p className="text-sm text-red-500">{errors.contactEmail}</p>
+            )}
           </div>
         </CardContent>
       </Card>

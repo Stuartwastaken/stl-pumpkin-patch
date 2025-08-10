@@ -4,16 +4,21 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Check, ArrowLeft, Package, Truck, Settings, Phone, ShoppingCart } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Check, ArrowLeft, Package, Truck, Settings, Phone, ShoppingCart, CheckCircle, AlertCircle } from "lucide-react";
 import { useState } from "react";
 import { getPackageById } from "@/data/packages";
 import PackageConfiguration, { PackageConfig } from "@/components/PackageConfiguration";
+import { sendOrderEmail, OrderSubmission } from "@/services/emailService";
 
 const PackageDetail = () => {
   const { packageId } = useParams();
   const navigate = useNavigate();
   const [currentTab, setCurrentTab] = useState("overview");
   const [packageConfig, setPackageConfig] = useState<PackageConfig | null>(null);
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'success' | 'error'>('idle');
   
   const pkg = getPackageById(packageId!);
   
@@ -36,9 +41,68 @@ const PackageDetail = () => {
     );
   }
 
+  const handleConfigChange = (config: PackageConfig, valid: boolean) => {
+    setPackageConfig(config);
+    setIsFormValid(valid);
+  };
+
+  const calculateTotalPrice = (): number => {
+    if (!packageConfig) return pkg.priceValue;
+    
+    const costs = {
+      extraHayBales: 15,
+      extraLargePumpkins: 12,
+      extraMediumPumpkins: 8,
+      extraSpecialtyPumpkins: 10
+    };
+
+    const addOnsCost = Object.entries(packageConfig.customizations).reduce((total, [key, qty]) => {
+      return total + (costs[key as keyof typeof costs] * qty);
+    }, 0);
+
+    return pkg.priceValue + addOnsCost;
+  };
+
+  const handleOrderSubmission = async () => {
+    if (!packageConfig || !isFormValid) {
+      setSubmissionStatus('error');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmissionStatus('idle');
+
+    try {
+      const orderSubmission: OrderSubmission = {
+        package: pkg,
+        config: packageConfig,
+        totalPrice: calculateTotalPrice()
+      };
+
+      const success = await sendOrderEmail(orderSubmission);
+      
+      if (success) {
+        setSubmissionStatus('success');
+        setCurrentTab('overview'); // Switch back to overview tab
+      } else {
+        setSubmissionStatus('error');
+      }
+    } catch (error) {
+      console.error('Order submission error:', error);
+      setSubmissionStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleOrderPackage = () => {
-    // Scroll to contact section or open contact modal
-    navigate('/#contact');
+    // If on overview tab, switch to configure tab
+    // If on configure tab and form is valid, submit the order
+    if (currentTab === 'overview') {
+      setCurrentTab('configure');
+    } else {
+      handleOrderSubmission();
+    }
   };
 
   return (
@@ -152,9 +216,27 @@ const PackageDetail = () => {
               </TabsContent>
 
               <TabsContent value="configure" className="mt-6">
+                {submissionStatus === 'success' && (
+                  <Alert className="mb-6 border-green-200 bg-green-50">
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                    <AlertDescription className="text-green-800">
+                      <strong>Order submitted successfully!</strong> We've received your order and will contact you within 24 hours to confirm details and schedule delivery.
+                    </AlertDescription>
+                  </Alert>
+                )}
+                
+                {submissionStatus === 'error' && (
+                  <Alert className="mb-6 border-red-200 bg-red-50">
+                    <AlertCircle className="h-4 w-4 text-red-600" />
+                    <AlertDescription className="text-red-800">
+                      <strong>Order submission failed.</strong> Please check that all required fields are filled out correctly and try again. If the problem persists, please call us directly.
+                    </AlertDescription>
+                  </Alert>
+                )}
+
                 <PackageConfiguration 
                   package={pkg} 
-                  onConfigChange={setPackageConfig}
+                  onConfigChange={handleConfigChange}
                 />
               </TabsContent>
             </Tabs>
@@ -166,14 +248,7 @@ const PackageDetail = () => {
               <CardHeader>
                 <div className="text-center">
                   <div className="text-4xl font-bold text-primary mb-2">
-                    {packageConfig 
-                      ? `$${pkg.priceValue + (packageConfig.customizations ? 
-                          Object.entries(packageConfig.customizations).reduce((total, [key, qty]) => {
-                            const costs = { extraHayBales: 15, extraLargePumpkins: 12, extraMediumPumpkins: 8, extraSpecialtyPumpkins: 10 };
-                            return total + (costs[key as keyof typeof costs] * qty);
-                          }, 0) : 0)}`
-                      : pkg.price
-                    }
+                    ${packageConfig ? calculateTotalPrice() : pkg.priceValue}
                   </div>
                   <CardTitle className="text-xl">{pkg.name}</CardTitle>
                   <CardDescription>{pkg.description}</CardDescription>
@@ -220,7 +295,7 @@ const PackageDetail = () => {
                     <Button 
                       className="w-full gradient-primary text-white hover-glow"
                       size="lg"
-                      onClick={() => setCurrentTab("configure")}
+                      onClick={handleOrderPackage}
                     >
                       <ShoppingCart className="w-4 h-4 mr-2" />
                       Configure & Order
@@ -230,10 +305,19 @@ const PackageDetail = () => {
                       className="w-full gradient-primary text-white hover-glow"
                       size="lg"
                       onClick={handleOrderPackage}
-                      disabled={!packageConfig?.contactInfo.name || !packageConfig?.contactInfo.phone}
+                      disabled={!isFormValid || isSubmitting}
                     >
-                      <Phone className="w-4 h-4 mr-2" />
-                      Submit Order Request
+                      {isSubmitting ? (
+                        <>
+                          <div className="w-4 h-4 mr-2 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                          Submitting...
+                        </>
+                      ) : (
+                        <>
+                          <Phone className="w-4 h-4 mr-2" />
+                          Submit Order Request
+                        </>
+                      )}
                     </Button>
                   )}
                   

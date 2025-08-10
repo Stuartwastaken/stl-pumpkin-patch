@@ -72,10 +72,9 @@ const ServiceArea = () => {
               <div className="bg-background p-6 rounded-lg border border-border">
                 <h4 className="font-semibold text-lg mb-3 text-foreground">Scheduling</h4>
                 <ul className="space-y-2 text-muted-foreground">
-                  <li>• Same-day delivery available (order by 2 PM)</li>
-                  <li>• Next-day delivery guaranteed</li>
-                  <li>• Weekend deliveries available</li>
-                  <li>• Flexible timing to fit your schedule</li>
+                  <li>• Same-week delivery available </li>
+                  <li>• Weekend deliveries available </li>
+                  <li>• Flexible timing to fit your schedule (if requested)</li>
                 </ul>
               </div>
               
@@ -91,7 +90,7 @@ const ServiceArea = () => {
                     <span className="text-foreground">Cash on delivery</span>
                   </div>
                   <p className="text-sm text-muted-foreground mt-3">
-                    Payment due after delivery and setup completion
+                    Payment due after delivery and setup completion or 10% discount for Venmo pre-payment
                   </p>
                 </div>
               </div>

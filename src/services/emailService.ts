@@ -31,6 +31,12 @@ export const sendOrderEmail = async (order: OrderSubmission): Promise<boolean> =
       }
     });
 
+    // Calculate pricing with potential discount
+    const baseTotal = order.package.priceValue + addOnsCost;
+    const isVenmoPayment = order.config.paymentMethod === 'venmo';
+    const discount = isVenmoPayment ? baseTotal * 0.1 : 0;
+    const finalTotal = baseTotal - discount;
+
     // Prepare email template parameters
     const templateParams = {
       // Email destination (MUST be first for EmailJS)
@@ -55,7 +61,12 @@ export const sendOrderEmail = async (order: OrderSubmission): Promise<boolean> =
       addons_cost: addOnsCost > 0 ? `$${addOnsCost}` : '$0',
       
       // Pricing
-      total_price: `$${order.totalPrice}`,
+      subtotal_price: `$${baseTotal.toFixed(2)}`,
+      venmo_discount: isVenmoPayment ? `$${discount.toFixed(2)}` : '$0.00',
+      total_price: `$${finalTotal.toFixed(2)}`,
+      
+      // Payment Info
+      payment_method: order.config.paymentMethod === 'venmo' ? 'Venmo Prepaid (10% discount applied)' : 'Pay on Delivery',
       
       // Customer Info
       customer_name: order.config.contactInfo.name,

@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Minus, Calendar, MapPin, MessageSquare } from "lucide-react";
+import { Plus, Minus, Calendar, MapPin, MessageSquare, CreditCard, DollarSign } from "lucide-react";
 import { Package } from "@/data/packages";
 
 interface PackageConfigurationProps {
@@ -23,6 +23,7 @@ export interface PackageConfig {
     state: string;
     zipCode: string;
   };
+  paymentMethod: 'delivery' | 'venmo';
   specialRequests: string;
   contactInfo: {
     name: string;
@@ -58,6 +59,7 @@ const PackageConfiguration = ({ package: pkg, onConfigChange }: PackageConfigura
       state: "",
       zipCode: ""
     },
+    paymentMethod: 'delivery',
     specialRequests: "",
     contactInfo: {
       name: "",
@@ -77,56 +79,56 @@ const PackageConfiguration = ({ package: pkg, onConfigChange }: PackageConfigura
 
   const validateField = (field: string, value: string): string | undefined => {
     switch (field) {
-      case 'deliveryDate':
+      case 'deliveryDate': {
         if (!value) return 'Delivery date is required';
         const selectedDate = new Date(value);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         if (selectedDate < today) return 'Delivery date cannot be in the past';
         return undefined;
-      
-      case 'deliveryStreet':
+      }
+      case 'deliveryStreet': {
         if (!value.trim()) return 'Street address is required';
         if (value.trim().length < 5) return 'Please provide a complete street address';
         return undefined;
-      
-      case 'deliveryCity':
+      }
+      case 'deliveryCity': {
         if (!value.trim()) return 'City is required';
         if (value.trim().length < 2) return 'Please provide a valid city name';
         return undefined;
-      
-      case 'deliveryState':
+      }
+      case 'deliveryState': {
         if (!value.trim()) return 'State is required';
         if (value.trim().length < 2) return 'Please provide a valid state';
         return undefined;
-      
-      case 'deliveryZipCode':
+      }
+      case 'deliveryZipCode': {
         if (!value.trim()) return 'ZIP code is required';
         const zipRegex = /^\d{5}(-\d{4})?$/;
         if (!zipRegex.test(value.trim())) return 'Please provide a valid ZIP code (12345 or 12345-6789)';
         return undefined;
-      
-      case 'contactName':
+      }
+      case 'contactName': {
         if (!value.trim()) return 'Name is required';
         if (value.trim().length < 2) return 'Please provide your full name';
         return undefined;
-      
-      case 'contactPhone':
+      }
+      case 'contactPhone': {
         if (!value.trim()) return 'Phone number is required';
-        const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-        const cleanPhone = value.replace(/[\s\-\(\)]/g, '');
+        const phoneRegex = /^[+]?[1-9][\d]{0,15}$/;
+        const cleanPhone = value.replace(/[\s\-()]/g, '');
         if (!phoneRegex.test(cleanPhone) || cleanPhone.length < 10) {
           return 'Please provide a valid phone number';
         }
         return undefined;
-      
-      case 'contactEmail':
+      }
+      case 'contactEmail': {
         if (value && value.trim()) {
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           if (!emailRegex.test(value)) return 'Please provide a valid email address';
         }
         return undefined;
-      
+      }
       default:
         return undefined;
     }
@@ -234,7 +236,32 @@ const PackageConfiguration = ({ package: pkg, onConfigChange }: PackageConfigura
     }, 0);
   };
 
-  const totalPrice = pkg.priceValue + calculateExtraCost();
+  const getFullPrice = () => {
+    return pkg.priceValue + calculateExtraCost();
+  };
+
+  const getDiscountedPrice = () => {
+    const fullPrice = getFullPrice();
+    return fullPrice * 0.9; // 10% discount
+  };
+
+  const handleVenmoPayment = () => {
+    const totalAmount = getDiscountedPrice().toFixed(2);
+    const note = encodeURIComponent("hello world");
+    
+    // Create Venmo deep link
+    const venmoURL = `venmo://paycharge?txn=pay&recipients=natalieptay&amount=${totalAmount}&note=${note}`;
+    
+    // Try to open Venmo app, fallback to web
+    try {
+      window.location.href = venmoURL;
+    } catch (error) {
+      // Fallback to Venmo web if app not available
+      window.open(`https://venmo.com/natalieptay`, '_blank');
+    }
+  };
+
+
 
   return (
     <div className="space-y-6">
@@ -274,6 +301,117 @@ const PackageConfiguration = ({ package: pkg, onConfigChange }: PackageConfigura
           </CardContent>
         </Card>
       )}
+
+      {/* Payment Method Selection */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <CreditCard className="w-5 h-5" />
+            Payment Method
+          </CardTitle>
+          <CardDescription>Choose how you'd like to pay for your order</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid md:grid-cols-2 gap-4">
+            {/* Pay on Delivery */}
+            <div 
+              className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                config.paymentMethod === 'delivery' 
+                  ? 'border-primary bg-primary/5' 
+                  : 'border-muted hover:border-primary/50'
+              }`}
+              onClick={() => updateConfig({ paymentMethod: 'delivery' })}
+            >
+              <div className="flex items-start gap-3">
+                <input 
+                  type="radio" 
+                  name="paymentMethod"
+                  checked={config.paymentMethod === 'delivery'}
+                  onChange={() => updateConfig({ paymentMethod: 'delivery' })}
+                  className="mt-1"
+                />
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <DollarSign className="w-4 h-4 text-green-600" />
+                    <h3 className="font-semibold text-foreground">Pay on Delivery</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Pay with cash or Venmo when we deliver your pumpkins
+                  </p>
+                  <div className="mt-2">
+                    <span className="text-lg font-bold text-foreground">
+                      ${getFullPrice().toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Venmo Prepay */}
+            <div 
+              className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                config.paymentMethod === 'venmo' 
+                  ? 'border-primary bg-primary/5' 
+                  : 'border-muted hover:border-primary/50'
+              }`}
+              onClick={() => updateConfig({ paymentMethod: 'venmo' })}
+            >
+              <div className="flex items-start gap-3">
+                <input 
+                  type="radio" 
+                  name="paymentMethod"
+                  checked={config.paymentMethod === 'venmo'}
+                  onChange={() => updateConfig({ paymentMethod: 'venmo' })}
+                  className="mt-1"
+                />
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-4 h-4 bg-blue-500 rounded text-white text-xs flex items-center justify-center font-bold">V</div>
+                    <h3 className="font-semibold text-foreground">Venmo Prepay</h3>
+                    <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs">
+                      Save 10%
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Pay now with Venmo (@natalieptay) and save 10%
+                  </p>
+                  <div className="mt-2 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground line-through">
+                        ${getFullPrice().toFixed(2)}
+                      </span>
+                      <span className="text-lg font-bold text-green-600">
+                        ${getDiscountedPrice().toFixed(2)}
+                      </span>
+                    </div>
+                    <p className="text-xs text-green-600 font-medium">
+                      You save ${(getFullPrice() - getDiscountedPrice()).toFixed(2)}!
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Venmo Payment Button */}
+          {config.paymentMethod === 'venmo' && (
+            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium text-blue-900">Ready to pay with Venmo?</p>
+                  <p className="text-sm text-blue-700">This will open the Venmo app with your order total</p>
+                </div>
+                <Button 
+                  onClick={handleVenmoPayment}
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  Open Venmo
+                </Button>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Add-Ons and Customizations */}
       <Card>
@@ -568,37 +706,7 @@ const PackageConfiguration = ({ package: pkg, onConfigChange }: PackageConfigura
         </CardContent>
       </Card>
 
-      {/* Order Summary */}
-      <Card className="border-primary/20 bg-primary/5">
-        <CardHeader>
-          <CardTitle>Order Summary</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="flex justify-between text-sm">
-            <span>Base Package ({pkg.name}):</span>
-            <span>${pkg.priceValue}</span>
-          </div>
-          
-          {calculateExtraCost() > 0 && (
-            <div className="flex justify-between text-sm">
-              <span>Add-ons:</span>
-              <span>+${calculateExtraCost()}</span>
-            </div>
-          )}
 
-          <Separator />
-          
-          <div className="flex justify-between font-semibold text-lg">
-            <span>Total Price:</span>
-            <span className="text-primary">${totalPrice}</span>
-          </div>
-
-          <div className="text-xs text-muted-foreground">
-            {pkg.includes_setup ? "Setup service included" : "DIY arrangement"} • 
-            Delivery included • Payment via Venmo or cash
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };

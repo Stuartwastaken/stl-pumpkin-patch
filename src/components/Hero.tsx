@@ -2,6 +2,26 @@ import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-pumpkins.jpg";
 
 const Hero = () => {
+  const scrollToPackages = () => {
+    const packagesSection = document.getElementById('packages');
+    if (packagesSection) {
+      packagesSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
+  const scrollToAbout = () => {
+    const aboutSection = document.getElementById('about');
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
@@ -29,6 +49,7 @@ const Hero = () => {
           <Button 
             size="lg" 
             className="gradient-primary text-white font-semibold px-8 py-4 text-lg hover-lift border-0 shadow-warm"
+            onClick={scrollToPackages}
           >
             View Packages
           </Button>
@@ -36,6 +57,7 @@ const Hero = () => {
             variant="outline" 
             size="lg"
             className="border-white/30 text-white bg-white/10 backdrop-blur-sm hover:bg-white/20 px-8 py-4 text-lg transition-smooth"
+            onClick={scrollToAbout}
           >
             Learn More
           </Button>

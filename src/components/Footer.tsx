@@ -32,9 +32,9 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-lg mb-4">Get in Touch</h4>
             <div className="space-y-2 text-primary-foreground/80">
-              <p>📱 (314) 555-PUMP</p>
-              <p>📧 hello@stlpumpkins.com</p>
-              <p>💳 Venmo: @STLPumpkins</p>
+              <p>📱 (618) 501-2828</p>
+              <p>📧 stlpumpkinsdelivery@gmail.com</p>
+              <p>💳 Venmo: @natalieptay</p>
               <p>📍 Serving Saint Louis & Surrounding Areas</p>
             </div>
           </div>

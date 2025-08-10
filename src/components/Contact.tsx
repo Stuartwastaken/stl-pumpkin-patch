@@ -29,7 +29,7 @@ const Contact = () => {
               </CardHeader>
               <CardContent>
                 <Button className="w-full gradient-primary text-white">
-                  Text (314) 555-PUMP
+                  Text (618) 501-2828
                 </Button>
               </CardContent>
             </Card>
@@ -44,7 +44,7 @@ const Contact = () => {
               </CardHeader>
               <CardContent>
                 <Button variant="outline" className="w-full hover-glow">
-                  Call (314) 555-PUMP
+                  Call (618) 501-2828
                 </Button>
               </CardContent>
             </Card>
@@ -59,7 +59,7 @@ const Contact = () => {
               </CardHeader>
               <CardContent>
                 <Button variant="outline" className="w-full hover-glow">
-                  hello@stlpumpkins.com
+                  stlpumpkinsdelivery@gmail.com
                 </Button>
               </CardContent>
             </Card>

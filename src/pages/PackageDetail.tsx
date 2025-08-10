@@ -250,7 +250,6 @@ const PackageDetail = () => {
             <OrderSummary 
               package={pkg} 
               config={packageConfig} 
-              isCompact={true}
               onAction={handleOrderPackage}
               actionDisabled={currentTab === "configure" && (!isFormValid || isSubmitting)}
               isSubmitting={isSubmitting}

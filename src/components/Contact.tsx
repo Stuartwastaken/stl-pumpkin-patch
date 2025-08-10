@@ -108,7 +108,7 @@ const Contact = () => {
                     <div>
                       <h4 className="font-semibold mb-1">Enjoy Your Display</h4>
                       <p className="text-sm text-muted-foreground">
-                        I'll deliver, arrange, and clean up. You just enjoy the results!
+                        I'll deliver, and arrange. You just enjoy the results!
                       </p>
                     </div>
                   </div>

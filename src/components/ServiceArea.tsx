@@ -2,7 +2,12 @@ import { MapPin, Clock } from "lucide-react";
 
 const ServiceArea = () => {
   const areas = [
-    "Downtown Saint Louis",
+    "St Charles",
+    "St Peters",
+    "O'Fallon",
+    "Fenton",
+    "Lake St Louis",
+    "St Charles County",
     "Clayton", 
     "University City",
     "Webster Groves",
@@ -96,8 +101,7 @@ const ServiceArea = () => {
                 <ul className="space-y-2 text-muted-foreground">
                   <li>• Fresh pumpkin selection</li>
                   <li>• Professional arrangement</li>
-                  <li>• Cleanup of packaging</li>
-                  <li>• Care instructions</li>
+                  <li>• Money back guarantee</li>
                 </ul>
               </div>
             </div>

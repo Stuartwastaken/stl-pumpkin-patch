@@ -209,9 +209,96 @@ const PackageDetail = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid lg:grid-cols-3 gap-12">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
+        {/* Success State - Show only when order is successfully submitted */}
+        {submissionStatus === 'success' ? (
+          <div className="max-w-4xl mx-auto space-y-8">
+            {/* Package Header */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground">
+                  {pkg.name}
+                </h1>
+                {pkg.popular && (
+                  <Badge className="bg-primary text-primary-foreground">Most Popular</Badge>
+                )}
+              </div>
+              <p className="text-xl text-muted-foreground">{pkg.description}</p>
+            </div>
+
+            {/* Success Alert */}
+            <Alert className="border-green-200 bg-green-50 p-6">
+              <CheckCircle className="h-6 w-6 text-green-600" />
+              <AlertDescription className="text-green-800 ml-2">
+                <div className="space-y-2">
+                  <div className="text-lg font-semibold">🎉 Order submitted successfully!</div>
+                  <p className="text-base">
+                    We've received your pumpkin delivery order and will contact you within 24 hours to confirm details and schedule your delivery.
+                  </p>
+                  <p className="text-sm">
+                    Thank you for choosing STL Pumpkin Patch! We can't wait to help make your fall display amazing.
+                  </p>
+                </div>
+              </AlertDescription>
+            </Alert>
+
+            {/* Order Summary for Reference */}
+            {packageConfig && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5 text-green-600" />
+                    Your Order Summary
+                  </CardTitle>
+                  <CardDescription>Reference details for your pumpkin delivery order</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="font-medium text-foreground mb-2">Package Details</h4>
+                      <div className="space-y-1 text-sm">
+                        <p><span className="text-muted-foreground">Package:</span> {pkg.name}</p>
+                        {packageConfig.selectedCollection && (
+                          <p><span className="text-muted-foreground">Collection:</span> {packageConfig.selectedCollection}</p>
+                        )}
+                        <p><span className="text-muted-foreground">Payment:</span> {packageConfig.paymentMethod === 'venmo' ? 'Venmo Prepay (10% discount)' : 'Pay on Delivery'}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-foreground mb-2">Delivery Information</h4>
+                      <div className="space-y-1 text-sm">
+                        <p><span className="text-muted-foreground">Week:</span> {packageConfig.deliveryDate}</p>
+                        <p><span className="text-muted-foreground">Address:</span> {packageConfig.deliveryAddress.street}</p>
+                        <p className="text-muted-foreground">{packageConfig.deliveryAddress.city}, {packageConfig.deliveryAddress.state} {packageConfig.deliveryAddress.zipCode}</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Call to Action */}
+            <div className="text-center pt-6">
+              <Button onClick={() => navigate('/')} size="lg" className="mr-4">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Browse More Packages
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg"
+                onClick={() => {
+                  setSubmissionStatus('idle');
+                  setCurrentTab('overview');
+                }}
+              >
+                Place Another Order
+              </Button>
+            </div>
+          </div>
+        ) : (
+          // Normal ordering flow when not in success state
+          <div className="grid lg:grid-cols-3 gap-12">
+            {/* Main Content */}
+            <div className="lg:col-span-2 space-y-8">
             {/* Package Header */}
             <div className="space-y-4">
               <div className="flex items-center gap-4">
@@ -345,15 +432,6 @@ const PackageDetail = () => {
               </TabsContent>
 
               <TabsContent value="configure" className="mt-6">
-                {submissionStatus === 'success' && (
-                  <Alert className="mb-6 border-green-200 bg-green-50">
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                    <AlertDescription className="text-green-800">
-                      <strong>Order submitted successfully!</strong> We've received your order and will contact you within 24 hours to confirm details and schedule delivery.
-                    </AlertDescription>
-                  </Alert>
-                )}
-                
                 {submissionStatus === 'error' && (
                   <Alert className="mb-6 border-red-200 bg-red-50">
                     <AlertCircle className="h-4 w-4 text-red-600" />
@@ -384,6 +462,7 @@ const PackageDetail = () => {
             />
           </div>
         </div>
+        )}
       </div>
 
       {/* Image Modal/Lightbox */}

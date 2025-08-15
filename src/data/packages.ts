@@ -2,16 +2,24 @@
 import fullSetup1Img1 from "@/assets/full-1/full-1.webp";
 import fullSetup1Img2 from "@/assets/full-1/full-2.webp";
 import fullSetup1Img3 from "@/assets/full-1/full-3.webp";
+import fullSetup1Img4 from "@/assets/full-1/full-4.webp";
+import fullSetup1Img5 from "@/assets/full-1/full-5.webp";
+import fullSetup1Img6 from "@/assets/full-1/full-6.webp";
+import fullSetup1Img7 from "@/assets/full-1/full-7.webp";
 
 // Full Set Up #2 images  
 import fullSetup2Img1 from "@/assets/full-2/full-1.webp";
 import fullSetup2Img2 from "@/assets/full-2/full-2.webp";
 import fullSetup2Img3 from "@/assets/full-2/full-3.webp";
+import fullSetup2Img4 from "@/assets/full-2/full-4.webp";
+import fullSetup2Img5 from "@/assets/full-2/full-5.webp";
+
 
 // Full Set Up #3 images
 import fullSetup3Img1 from "@/assets/full-3/full-1.webp";
 import fullSetup3Img2 from "@/assets/full-3/full-2.webp";
 import fullSetup3Img3 from "@/assets/full-3/full-3.webp";
+import fullSetup3Img4 from "@/assets/full-3/full-4.webp";
 
 // DIY Package #1 images
 import diyPackage1Img1 from "@/assets/diy-package-1/diy-1.webp";
@@ -75,7 +83,7 @@ export const packages: Package[] = [
     includes_setup: true,
     includes_delivery: true,
     setup_time: "2-3 hours",
-    images: [fullSetup1Img1, fullSetup1Img2, fullSetup1Img3]
+    images: [fullSetup1Img1, fullSetup1Img2, fullSetup1Img3, fullSetup1Img4, fullSetup1Img5, fullSetup1Img6, fullSetup1Img7]
   },
   {
     id: "full-setup-2", 
@@ -100,7 +108,7 @@ export const packages: Package[] = [
     includes_setup: true,
     includes_delivery: true,
     setup_time: "1.5-2 hours",
-    images: [fullSetup2Img1, fullSetup2Img2, fullSetup2Img3]
+    images: [fullSetup2Img1, fullSetup2Img2, fullSetup2Img3, fullSetup2Img4, fullSetup2Img5]
   },
   {
     id: "full-setup-3",
@@ -125,7 +133,7 @@ export const packages: Package[] = [
     includes_setup: true,
     includes_delivery: true,
     setup_time: "1-1.5 hours",
-    images: [fullSetup3Img1, fullSetup3Img2, fullSetup3Img3]
+    images: [fullSetup3Img1, fullSetup3Img2, fullSetup3Img3, fullSetup3Img4]
   },
   {
     id: "diy-package-1",

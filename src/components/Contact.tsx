@@ -97,8 +97,14 @@ const Contact = () => {
                   <CardDescription className="text-center">For custom requests and inquiries</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button variant="outline" className="w-full hover-glow">
-                    stlpumpkinsdelivery@gmail.com
+                  <Button 
+                    variant="outline" 
+                    className="w-full hover-glow" 
+                    asChild
+                  >
+                    <a href="mailto:stlpumpkinsdelivery@gmail.com">
+                      stlpumpkinsdelivery@gmail.com
+                    </a>
                   </Button>
                 </CardContent>
               </Card>

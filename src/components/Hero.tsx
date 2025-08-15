@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/hero-pumpkins.jpg";
+import heroImage from "@/assets/gporch_main.jpg";
 
 const Hero = () => {
   const scrollToPackages = () => {

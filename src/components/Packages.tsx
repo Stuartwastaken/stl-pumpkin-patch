@@ -40,11 +40,11 @@ const Packages = () => {
               
               {/* Package Image */}
               {pkg.images && pkg.images.length > 0 && (
-                <div className="relative h-56 md:h-64 overflow-hidden rounded-t-lg">
+                <div className="relative h-64 md:h-72 overflow-hidden rounded-t-lg">
                   <img 
                     src={pkg.images[0]} 
                     alt={`${pkg.name} example`}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover object-bottom hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
                   {pkg.images.length > 1 && (

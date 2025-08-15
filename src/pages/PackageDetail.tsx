@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Check, ArrowLeft, Package, Truck, Settings, Phone, ShoppingCart, CheckCircle, AlertCircle, X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { getPackageById } from "@/data/packages";
 import PackageConfiguration, { PackageConfig } from "@/components/PackageConfiguration";
 import { sendOrderEmail, OrderSubmission } from "@/services/emailService";
@@ -22,6 +22,65 @@ const PackageDetail = () => {
   const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  
+  // Ref for scrolling to tabs section
+  const tabsRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to top when component mounts or packageId changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [packageId]);
+
+  // Image modal functions
+  const openImageModal = (index: number) => {
+    setSelectedImageIndex(index);
+    setIsImageModalOpen(true);
+  };
+
+  const closeImageModal = () => {
+    setIsImageModalOpen(false);
+    setSelectedImageIndex(null);
+  };
+
+  const nextImage = () => {
+    const pkg = getPackageById(packageId!);
+    if (pkg?.images && selectedImageIndex !== null) {
+      setSelectedImageIndex((selectedImageIndex + 1) % pkg.images.length);
+    }
+  };
+
+  const prevImage = () => {
+    const pkg = getPackageById(packageId!);
+    if (pkg?.images && selectedImageIndex !== null) {
+      setSelectedImageIndex(selectedImageIndex === 0 ? pkg.images.length - 1 : selectedImageIndex - 1);
+    }
+  };
+
+  // Add keyboard event listener for image modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isImageModalOpen) return;
+      if (e.key === 'Escape') closeImageModal();
+      if (e.key === 'ArrowRight') nextImage();
+      if (e.key === 'ArrowLeft') prevImage();
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isImageModalOpen, selectedImageIndex]);
+
+  // Helper function to scroll to tabs section
+  const scrollToTabs = () => {
+    setTimeout(() => {
+      if (tabsRef.current) {
+        tabsRef.current.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start',
+          inline: 'nearest'
+        });
+      }
+    }, 100);
+  };
   
   const pkg = getPackageById(packageId!);
   
@@ -49,41 +108,7 @@ const PackageDetail = () => {
     setIsFormValid(valid);
   };
 
-  const openImageModal = (index: number) => {
-    setSelectedImageIndex(index);
-    setIsImageModalOpen(true);
-  };
 
-  const closeImageModal = () => {
-    setIsImageModalOpen(false);
-    setSelectedImageIndex(null);
-  };
-
-  const nextImage = () => {
-    if (pkg?.images && selectedImageIndex !== null) {
-      setSelectedImageIndex((selectedImageIndex + 1) % pkg.images.length);
-    }
-  };
-
-  const prevImage = () => {
-    if (pkg?.images && selectedImageIndex !== null) {
-      setSelectedImageIndex(selectedImageIndex === 0 ? pkg.images.length - 1 : selectedImageIndex - 1);
-    }
-  };
-
-  // Handle keyboard navigation
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (!isImageModalOpen) return;
-    if (e.key === 'Escape') closeImageModal();
-    if (e.key === 'ArrowRight') nextImage();
-    if (e.key === 'ArrowLeft') prevImage();
-  };
-
-  // Add keyboard event listener
-  React.useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isImageModalOpen, selectedImageIndex]);
 
 
 
@@ -125,12 +150,24 @@ const PackageDetail = () => {
       if (success) {
         setSubmissionStatus('success');
         setCurrentTab('overview'); // Switch back to overview tab
+        // Scroll to top to show success message
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 100);
       } else {
         setSubmissionStatus('error');
+        // Scroll to top to show error message
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 100);
       }
     } catch (error) {
       console.error('Order submission error:', error);
       setSubmissionStatus('error');
+      // Scroll to top to show error message
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
     } finally {
       setIsSubmitting(false);
     }
@@ -141,6 +178,8 @@ const PackageDetail = () => {
     // If on configure tab and form is valid, submit the order
     if (currentTab === 'overview') {
       setCurrentTab('configure');
+      // Scroll to tabs section when switching to configure tab
+      scrollToTabs();
     } else {
       handleOrderSubmission();
     }
@@ -227,7 +266,12 @@ const PackageDetail = () => {
             )}
 
             {/* Tabbed Content */}
-            <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
+            <div ref={tabsRef}>
+              <Tabs value={currentTab} onValueChange={(value) => {
+                setCurrentTab(value);
+                // Scroll to tabs section when manually switching tabs
+                scrollToTabs();
+              }} className="w-full">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="overview" className="flex items-center gap-2">
                   <Package className="w-4 h-4" />
@@ -325,6 +369,7 @@ const PackageDetail = () => {
                 />
               </TabsContent>
             </Tabs>
+            </div>
           </div>
 
           {/* Sidebar - Order Card */}

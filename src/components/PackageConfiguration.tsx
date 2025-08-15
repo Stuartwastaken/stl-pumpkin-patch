@@ -244,7 +244,7 @@ const PackageConfiguration = ({ package: pkg, onConfigChange }: PackageConfigura
 
   const handleVenmoPayment = () => {
     const totalAmount = getDiscountedPrice().toFixed(2);
-    const note = encodeURIComponent("hello world");
+    const note = encodeURIComponent(`STL Pumpkins - ${pkg.name}`);
     
     // Create Venmo deep link
     const venmoURL = `venmo://paycharge?txn=pay&recipients=natalieptay&amount=${totalAmount}&note=${note}`;

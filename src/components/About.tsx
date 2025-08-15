@@ -1,5 +1,5 @@
 import { Leaf, Truck, Heart } from "lucide-react";
-import deliveryImage from "@/assets/delivery-scene.jpg";
+import deliveryImage from "@/assets/natalie.webp";
 
 const About = () => {
   return (

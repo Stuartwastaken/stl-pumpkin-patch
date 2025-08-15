@@ -5,8 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Check, ArrowLeft, Package, Truck, Settings, Phone, ShoppingCart, CheckCircle, AlertCircle } from "lucide-react";
-import { useState } from "react";
+import { Check, ArrowLeft, Package, Truck, Settings, Phone, ShoppingCart, CheckCircle, AlertCircle, X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
+import React, { useState } from "react";
 import { getPackageById } from "@/data/packages";
 import PackageConfiguration, { PackageConfig } from "@/components/PackageConfiguration";
 import { sendOrderEmail, OrderSubmission } from "@/services/emailService";
@@ -20,6 +20,8 @@ const PackageDetail = () => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   
   const pkg = getPackageById(packageId!);
   
@@ -46,6 +48,42 @@ const PackageDetail = () => {
     setPackageConfig(config);
     setIsFormValid(valid);
   };
+
+  const openImageModal = (index: number) => {
+    setSelectedImageIndex(index);
+    setIsImageModalOpen(true);
+  };
+
+  const closeImageModal = () => {
+    setIsImageModalOpen(false);
+    setSelectedImageIndex(null);
+  };
+
+  const nextImage = () => {
+    if (pkg?.images && selectedImageIndex !== null) {
+      setSelectedImageIndex((selectedImageIndex + 1) % pkg.images.length);
+    }
+  };
+
+  const prevImage = () => {
+    if (pkg?.images && selectedImageIndex !== null) {
+      setSelectedImageIndex(selectedImageIndex === 0 ? pkg.images.length - 1 : selectedImageIndex - 1);
+    }
+  };
+
+  // Handle keyboard navigation
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (!isImageModalOpen) return;
+    if (e.key === 'Escape') closeImageModal();
+    if (e.key === 'ArrowRight') nextImage();
+    if (e.key === 'ArrowLeft') prevImage();
+  };
+
+  // Add keyboard event listener
+  React.useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isImageModalOpen, selectedImageIndex]);
 
 
 
@@ -162,15 +200,25 @@ const PackageDetail = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {pkg.images.map((image, index) => (
-                      <div key={index} className="relative group overflow-hidden rounded-xl">
+                      <div 
+                        key={index} 
+                        className="relative group overflow-hidden rounded-xl cursor-pointer"
+                        onClick={() => openImageModal(index)}
+                      >
                         <img 
                           src={image} 
                           alt={`${pkg.name} example ${index + 1}`}
                           className="w-full h-56 md:h-64 object-cover transition-transform duration-300 group-hover:scale-105"
+                          loading="lazy"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
+                            <ZoomIn className="w-6 h-6 text-white" />
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -292,6 +340,64 @@ const PackageDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Image Modal/Lightbox */}
+      {isImageModalOpen && selectedImageIndex !== null && pkg?.images && (
+        <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4" onClick={closeImageModal}>
+          {/* Close Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute top-4 right-4 z-50 text-white hover:bg-white/20"
+            onClick={closeImageModal}
+          >
+            <X className="w-6 h-6" />
+          </Button>
+
+          {/* Navigation Buttons */}
+          {pkg.images.length > 1 && (
+            <>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-50 text-white hover:bg-white/20"
+                onClick={(e) => { e.stopPropagation(); prevImage(); }}
+              >
+                <ChevronLeft className="w-8 h-8" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-50 text-white hover:bg-white/20"
+                onClick={(e) => { e.stopPropagation(); nextImage(); }}
+              >
+                <ChevronRight className="w-8 h-8" />
+              </Button>
+            </>
+          )}
+
+          {/* Image Container */}
+          <div className="relative w-full max-w-5xl max-h-[85vh]" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={pkg.images[selectedImageIndex]}
+              alt={`${pkg.name} example ${selectedImageIndex + 1}`}
+              className="w-full h-auto max-h-[80vh] object-contain rounded-lg shadow-2xl"
+              loading="eager"
+            />
+            
+            {/* Image Counter */}
+            {pkg.images.length > 1 && (
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2">
+                <div className="bg-black/60 text-white px-3 py-1 rounded-full text-xs sm:text-sm">
+                  {selectedImageIndex + 1} of {pkg.images.length}
+                </div>
+              </div>
+            )}
+          </div>
+
+
+        </div>
+      )}
     </div>
   );
 };

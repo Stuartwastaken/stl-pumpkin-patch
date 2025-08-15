@@ -18,7 +18,12 @@ const ServiceArea = () => {
     "Shrewsbury",
     "Crestwood",
     "Affton",
-    "Sunset Hills"
+    "Sunset Hills",
+    "Ladue",
+    "Town and Country",
+    "Des Peres",
+    "Chesterfield",
+    "Ballwin",
   ];
 
   return (
@@ -55,7 +60,7 @@ const ServiceArea = () => {
             
             <div className="mt-6 p-4 bg-primary/10 rounded-lg border border-primary/20">
               <p className="text-sm text-foreground">
-                <strong>Delivery Range:</strong> Typically 15-20 miles from Washington University area. 
+                <strong>Delivery Range:</strong> Typically 20-35 miles from Washington University area. 
                 Contact me for specific address confirmation.
               </p>
             </div>

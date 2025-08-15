@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageCircle, Phone, Mail, Clock } from "lucide-react";
+import { MessageCircle, Mail, Clock } from "lucide-react";
 
 const Contact = () => {
   return (
@@ -16,55 +16,7 @@ const Contact = () => {
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* Contact Methods */}
-          <div className="space-y-6 animate-scale-in">
-            <Card className="hover-lift transition-smooth">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <MessageCircle className="w-6 h-6 text-primary" />
-                  <CardTitle>Text Message</CardTitle>
-                </div>
-                <CardDescription>Fastest way to reach me</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button className="w-full gradient-primary text-white">
-                  Text (618) 501-2828
-                </Button>
-              </CardContent>
-            </Card>
-            
-            <Card className="hover-lift transition-smooth">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <Phone className="w-6 h-6 text-primary" />
-                  <CardTitle>Phone Call</CardTitle>
-                </div>
-                <CardDescription>For detailed discussions</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button variant="outline" className="w-full hover-glow">
-                  Call (618) 501-2828
-                </Button>
-              </CardContent>
-            </Card>
-            
-            <Card className="hover-lift transition-smooth">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <Mail className="w-6 h-6 text-primary" />
-                  <CardTitle>Email</CardTitle>
-                </div>
-                <CardDescription>For custom requests</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button variant="outline" className="w-full hover-glow">
-                  stlpumpkinsdelivery@gmail.com
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-          
+        <div className="max-w-3xl mx-auto">
           {/* Order Information */}
           <div className="animate-fade-in">
             <Card className="h-full">
@@ -129,13 +81,28 @@ const Contact = () => {
             <h3 className="font-serif text-2xl font-semibold mb-4 text-foreground">
               Questions? I'm Here to Help!
             </h3>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              As a college entrepreneur, customer service is my top priority. 
+                        <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+              Customer service is my top priority. 
               Don't hesitate to reach out with any questions about packages, timing, or custom arrangements.
             </p>
-            <Button size="lg" className="gradient-primary text-white px-8 hover-lift">
-              Get Started Today
-            </Button>
+            
+            {/* Email Contact Card */}
+            <div className="max-w-md mx-auto">
+              <Card className="hover-lift transition-smooth">
+                <CardHeader>
+                  <div className="flex items-center justify-center gap-3">
+                    <Mail className="w-6 h-6 text-primary" />
+                    <CardTitle>Email for Questions</CardTitle>
+                  </div>
+                  <CardDescription className="text-center">For custom requests and inquiries</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button variant="outline" className="w-full hover-glow">
+                    stlpumpkinsdelivery@gmail.com
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </div>

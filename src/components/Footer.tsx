@@ -16,25 +16,13 @@ const Footer = () => {
               A college entrepreneur's passion project turned into your autumn solution.
             </p>
           </div>
-          
-          {/* Quick Links */}
-          <div>
-            <h4 className="font-semibold text-lg mb-4">Quick Links</h4>
-            <ul className="space-y-2 text-primary-foreground/80">
-              <li><a href="#packages" className="hover:text-primary-foreground transition-colors">Packages</a></li>
-              <li><a href="#about" className="hover:text-primary-foreground transition-colors">About</a></li>
-              <li><a href="#service-area" className="hover:text-primary-foreground transition-colors">Service Areas</a></li>
-              <li><a href="#contact" className="hover:text-primary-foreground transition-colors">Contact</a></li>
-            </ul>
-          </div>
+
           
           {/* Contact Info */}
           <div>
             <h4 className="font-semibold text-lg mb-4">Get in Touch</h4>
             <div className="space-y-2 text-primary-foreground/80">
-              <p>📱 (618) 501-2828</p>
               <p>📧 stlpumpkinsdelivery@gmail.com</p>
-              <p>💳 Venmo: @natalieptay</p>
               <p>📍 Serving Saint Louis & Surrounding Areas</p>
             </div>
           </div>

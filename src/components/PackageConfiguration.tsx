@@ -80,11 +80,8 @@ const PackageConfiguration = ({ package: pkg, onConfigChange }: PackageConfigura
   const validateField = (field: string, value: string): string | undefined => {
     switch (field) {
       case 'deliveryDate': {
-        if (!value) return 'Delivery date is required';
-        const selectedDate = new Date(value);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        if (selectedDate < today) return 'Delivery date cannot be in the past';
+        if (!value) return 'Delivery week is required';
+        // Since we're using predefined date ranges, no need to validate past dates
         return undefined;
       }
       case 'deliveryStreet': {
@@ -533,20 +530,50 @@ const PackageConfiguration = ({ package: pkg, onConfigChange }: PackageConfigura
           <CardDescription>When and where should we deliver your pumpkins?</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="delivery-date" className="text-sm font-medium">
-              Preferred Delivery Date *
+          <div className="space-y-3">
+            <Label className="text-sm font-medium">
+              Preferred Delivery Week *
             </Label>
-            <Input 
-              id="delivery-date"
-              type="date"
-              value={config.deliveryDate}
-              onChange={(e) => updateConfig({ deliveryDate: e.target.value })}
-              onBlur={() => handleFieldTouch('deliveryDate')}
-              min={new Date().toISOString().split('T')[0]}
-              className={errors.deliveryDate ? 'border-red-500' : ''}
-              required
-            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[
+                { label: "September 21st - 28th", value: "September 21st - 28th" },
+                { label: "September 28th - October 5th", value: "September 28th - October 5th" },
+                { label: "October 5th - October 12th", value: "October 5th - October 12th" },
+                { label: "October 12th - October 19th", value: "October 12th - October 19th" },
+                { label: "October 19th - October 26th", value: "October 19th - October 26th" },
+                { label: "October 26th - November 2nd", value: "October 26th - November 2nd" },
+                { label: "November 2nd - November 9th", value: "November 2nd - November 9th" }
+              ].map((dateRange) => (
+                <div 
+                  key={dateRange.value}
+                  className={`p-3 border rounded-lg cursor-pointer transition-all ${
+                    config.deliveryDate === dateRange.value 
+                      ? 'border-primary bg-primary/5 ring-2 ring-primary/20' 
+                      : 'border-muted hover:border-primary/50 hover:bg-muted/50'
+                  }`}
+                  onClick={() => {
+                    updateConfig({ deliveryDate: dateRange.value });
+                    handleFieldTouch('deliveryDate');
+                  }}
+                >
+                  <div className="flex items-center gap-3">
+                    <input 
+                      type="radio" 
+                      name="deliveryDate"
+                      checked={config.deliveryDate === dateRange.value}
+                      onChange={() => {
+                        updateConfig({ deliveryDate: dateRange.value });
+                        handleFieldTouch('deliveryDate');
+                      }}
+                      className="text-primary focus:ring-primary"
+                    />
+                    <span className="text-sm font-medium text-foreground">
+                      {dateRange.label}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
             {errors.deliveryDate && touched.has('deliveryDate') && (
               <p className="text-sm text-red-500">{errors.deliveryDate}</p>
             )}

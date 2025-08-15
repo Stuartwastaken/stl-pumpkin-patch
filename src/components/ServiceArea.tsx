@@ -87,7 +87,7 @@ const ServiceArea = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-primary rounded-full"></div>
-                    <span className="text-foreground">Cash on delivery</span>
+                    <span className="text-foreground">Cash or Check on delivery</span>
                   </div>
                   <p className="text-sm text-muted-foreground mt-3">
                     Payment due after delivery and setup completion or 10% discount for Venmo pre-payment

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/gporch_main.jpg";
+import heroImage from "@/assets/porch-main.jpg";
 
 const Hero = () => {
   const scrollToPackages = () => {
@@ -63,21 +63,7 @@ const Hero = () => {
           </Button>
         </div>
         
-        {/* Trust indicators */}
-        <div className="mt-12 flex flex-wrap justify-center items-center gap-8 text-white/70">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 bg-accent rounded-full animate-glow"></span>
-            <span className="text-sm font-medium">Same-Day Delivery</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 bg-accent rounded-full animate-glow"></span>
-            <span className="text-sm font-medium">Locally Sourced</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 bg-accent rounded-full animate-glow"></span>
-            <span className="text-sm font-medium">College Entrepreneur</span>
-          </div>
-        </div>
+    
       </div>
       
       {/* Floating pumpkin decoration */}

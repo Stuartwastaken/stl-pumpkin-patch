@@ -150,7 +150,7 @@ const OrderSummary = ({
               
               <div className="text-xs text-muted-foreground text-center">
                 {pkg.includes_setup ? "Setup service included" : "DIY arrangement"} • 
-                Delivery included • {isVenmoPayment ? 'Venmo @natalieptay' : 'Cash or Venmo on delivery'}
+                Delivery included • {isVenmoPayment ? 'Venmo @natalieptay' : 'Cash, check, or Venmo on delivery'}
               </div>
             </div>
           </>

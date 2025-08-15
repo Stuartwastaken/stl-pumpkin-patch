@@ -21,7 +21,7 @@ const Packages = () => {
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Choose the perfect package for your space. All packages include fresh, locally-sourced pumpkins 
-            and professional arrangement. Payment accepted via Venmo or cash after delivery.
+            delivered to your door. Full Set Up packages include professional styling on-site, while DIY packages let you create your own arrangement. Payment accepted via Venmo or cash.
           </p>
         </div>
         
@@ -33,9 +33,26 @@ const Packages = () => {
               style={{ animationDelay: `${index * 100}ms` }}
             >
               {pkg.popular && (
-                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground">
+                <Badge className="absolute top-3 right-3 z-20 bg-primary text-primary-foreground shadow-md pointer-events-none">
                   Most Popular
                 </Badge>
+              )}
+              
+              {/* Package Image */}
+              {pkg.images && pkg.images.length > 0 && (
+                <div className="relative h-56 md:h-64 overflow-hidden rounded-t-lg">
+                  <img 
+                    src={pkg.images[0]} 
+                    alt={`${pkg.name} example`}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
+                  {pkg.images.length > 1 && (
+                    <div className="absolute bottom-2 right-2 z-10 bg-black/60 text-white text-[10px] md:text-xs px-2 py-1 rounded">
+                      +{pkg.images.length - 1} more
+                    </div>
+                  )}
+                </div>
               )}
               
               <CardHeader>

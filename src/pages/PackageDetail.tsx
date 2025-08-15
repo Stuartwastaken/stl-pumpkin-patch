@@ -141,13 +141,42 @@ const PackageDetail = () => {
                 <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground">
                   {pkg.name}
                 </h1>
-                {pkg.id === "premium-display" && (
+                {pkg.popular && (
                   <Badge className="bg-primary text-primary-foreground">Most Popular</Badge>
                 )}
               </div>
               <p className="text-xl text-muted-foreground">{pkg.description}</p>
               <p className="text-lg text-foreground leading-relaxed">{pkg.longDescription}</p>
             </div>
+
+            {/* Package Image Gallery */}
+            {pkg.images && pkg.images.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Package className="w-5 h-5" />
+                    Package Examples
+                  </CardTitle>
+                  <CardDescription>
+                    See examples of this package in action
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {pkg.images.map((image, index) => (
+                      <div key={index} className="relative group overflow-hidden rounded-xl">
+                        <img 
+                          src={image} 
+                          alt={`${pkg.name} example ${index + 1}`}
+                          className="w-full h-56 md:h-64 object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Tabbed Content */}
             <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
@@ -210,10 +239,15 @@ const PackageDetail = () => {
                         </div>
                       </div>
                     </div>
-                    <div>
-                      <p className="font-medium mb-1">Space Requirements</p>
-                      <p className="text-sm text-muted-foreground">{pkg.space_required}</p>
-                    </div>
+                    
+                    {/* Disclaimer for Full Set Up packages only */}
+                    {pkg.includes_setup && (
+                      <div className="mt-4 p-3 bg-muted/50 rounded-lg border-l-4 border-primary/30">
+                        <p className="text-xs text-muted-foreground italic leading-relaxed">
+                          <strong>Note:</strong> Pumpkins may be placed throughout your porch and steps to create that perfect layered fall look—some pumpkins may not be visible in photos, but they're all part of the magic.
+                        </p>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </TabsContent>

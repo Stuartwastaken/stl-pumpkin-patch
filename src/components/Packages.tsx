@@ -21,7 +21,7 @@ const Packages = () => {
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Choose the perfect package for your space. All packages include fresh, locally-sourced pumpkins 
-            delivered to your door. Full Set Up packages include professional styling on-site, while DIY packages let you create your own arrangement. Payment accepted via Venmo or cash.
+            delivered to your door. Full Set Up packages include professional styling on-site, while DIY packages let you create your own arrangement.
           </p>
         </div>
         
@@ -88,15 +88,7 @@ const Packages = () => {
           ))}
         </div>
         
-        <div className="text-center mt-12 p-6 bg-card rounded-xl border shadow-warm animate-scale-in">
-          <h3 className="font-serif text-2xl font-semibold mb-3 text-foreground">Custom Packages Available</h3>
-          <p className="text-muted-foreground mb-4">
-            Need something different? I can create a custom package tailored to your specific needs and budget.
-          </p>
-          <Button variant="outline" className="hover-lift">
-            Request Custom Quote
-          </Button>
-        </div>
+
       </div>
     </section>
   );

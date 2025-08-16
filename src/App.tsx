@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import PackageDetail from "./pages/PackageDetail";
 import { HelmetProvider } from "react-helmet-async";
+import { Analytics } from "@vercel/analytics/react";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
+        <Analytics />
       </HelmetProvider>
     </TooltipProvider>
   </QueryClientProvider>

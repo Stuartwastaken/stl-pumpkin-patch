@@ -13,7 +13,6 @@ const Footer = () => {
             </h3>
             <p className="text-primary-foreground/80 leading-relaxed">
               Bringing locally sourced fall magic to Saint Louis, one porch at a time. 
-              A college entrepreneur's passion project turned into your autumn solution.
             </p>
           </div>
 

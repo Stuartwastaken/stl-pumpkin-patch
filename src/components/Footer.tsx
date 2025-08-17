@@ -1,4 +1,4 @@
-import { Heart, Leaf } from "lucide-react";
+import { Heart, Leaf, Instagram, Facebook } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -16,13 +16,52 @@ const Footer = () => {
             </p>
           </div>
 
-          
           {/* Contact Info */}
           <div>
             <h4 className="font-semibold text-lg mb-4">Get in Touch</h4>
             <div className="space-y-2 text-primary-foreground/80">
               <p>📧 <a href="mailto:stlpumpkinsdelivery@gmail.com" className="hover:text-primary-foreground transition-colors underline underline-offset-2">stlpumpkinsdelivery@gmail.com</a></p>
               <p>📍 Serving Saint Louis & Surrounding Areas</p>
+            </div>
+          </div>
+
+          {/* Social Media */}
+          <div>
+            <h4 className="font-semibold text-lg mb-4">Follow Us</h4>
+            <div className="space-y-2 text-primary-foreground/80">
+              <p className="flex items-center gap-2">
+                <Facebook className="w-4 h-4" />
+                <a 
+                  href="https://www.facebook.com/share/1Pr2ptyT4K/?mibextid=wwXIfr" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-primary-foreground transition-colors underline underline-offset-2"
+                >
+                  STL Pumpkins on Facebook
+                </a>
+              </p>
+              <p className="flex items-center gap-2">
+                <Instagram className="w-4 h-4" />
+                <a 
+                  href="https://instagram.com/stlpumpkinsdelivery" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-primary-foreground transition-colors underline underline-offset-2"
+                >
+                  @stlpumpkinsdelivery
+                </a>
+              </p>
+              <p className="flex items-center gap-2">
+                <Instagram className="w-4 h-4" />
+                <a 
+                  href="https://instagram.com/natalieptaylorr" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-primary-foreground transition-colors underline underline-offset-2"
+                >
+                  @natalieptaylorr
+                </a>
+              </p>
             </div>
           </div>
         </div>

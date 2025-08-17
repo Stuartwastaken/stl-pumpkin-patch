@@ -85,6 +85,7 @@ async function shouldSkip(filePath) {
   const base = path.basename(filePath);
   if (base.startsWith('.')) return true;
   if (base === '.DS_Store') return true;
+  if (base === 'favicon.png') return true;
 
   const ext = path.extname(filePath).toLowerCase();
   if (ext !== '.webp') return false; // only skip checks for webp; others should be converted to webp

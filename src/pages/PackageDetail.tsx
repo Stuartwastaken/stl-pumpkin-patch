@@ -2,7 +2,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Check, ArrowLeft, Package, Truck, Settings, Phone, ShoppingCart, CheckCircle, AlertCircle, X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
@@ -361,6 +360,7 @@ const PackageDetail = () => {
                             alt={`${pkg.name} example ${index + 1}`}
                             className="w-full h-56 md:h-64 object-cover transition-transform duration-300 group-hover:scale-105"
                             loading="lazy"
+                            onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }}
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -530,6 +530,7 @@ const PackageDetail = () => {
                 alt={`${pkg.name} example ${selectedImageIndex + 1}`}
                 className="w-full h-auto max-h-[80vh] object-contain rounded-lg shadow-2xl"
                 loading="eager"
+                onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }}
               />
               
               {/* Image Counter */}

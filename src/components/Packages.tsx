@@ -45,6 +45,8 @@ const Packages = () => {
                     src={pkg.images[0]} 
                     alt={`${pkg.name} example`}
                     className="w-full h-full object-cover object-bottom hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                    onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
                   {pkg.images.length > 1 && (

@@ -16,12 +16,23 @@ const About = () => {
             the St. Louis area community. Our mission is simple: bring the beauty of fall straight 
             to your doorstep with hand-picked, farm-fresh pumpkins.
           </p>
-          <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+          <p className="text-lg text-muted-foreground mb-3 leading-relaxed">
             Whether you're looking for a quick DIY drop-off or a full-service styled setup, we take 
             pride in creating moments of joy through seasonal charm. Every pumpkin is sourced from 
             local farms and selected with care, and we're all about making your home feel festive, 
             warm, and uniquely you.
           </p>
+          <div className="mb-8">
+            <a
+              href="https://www.rellekepumpkinpatch.com/about-us.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary underline underline-offset-4"
+            >
+              <Leaf className="w-4 h-4" />
+              Proudly sourcing pumpkins from Relleke Farm
+            </a>
+          </div>
           
           <div className="bg-primary/5 p-6 rounded-lg border border-primary/20 mb-8">
             <p className="text-lg text-foreground italic leading-relaxed text-center">

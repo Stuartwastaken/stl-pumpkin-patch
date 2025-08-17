@@ -150,6 +150,21 @@ const PackageDetail = () => {
       const success = await sendOrderEmail(orderSubmission);
       
       if (success) {
+        // Track GA4 lead form submission
+        try {
+          const pkgId = packageId || pkg.id;
+          const totalPrice = orderSubmission.totalPrice;
+          const paymentMethod = packageConfig.paymentMethod;
+          const { trackLeadFormSubmit } = await import("@/lib/analytics");
+          trackLeadFormSubmit({
+            packageId: pkgId,
+            packageName: pkg.name,
+            totalPrice: typeof totalPrice === 'number' ? totalPrice : Number(totalPrice),
+            paymentMethod: paymentMethod,
+          });
+        } catch (e) {
+          console.warn('GA tracking failed or not available', e);
+        }
         setSubmissionStatus('success');
         setCurrentTab('overview'); // Switch back to overview tab
         // Scroll to top to show success message

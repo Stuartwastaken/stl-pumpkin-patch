@@ -333,7 +333,7 @@ const PackageConfiguration = ({ package: pkg, onConfigChange }: PackageConfigura
                     <h3 className="font-semibold text-foreground">Pay on Delivery</h3>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Pay with cash, check,or Venmo when we deliver your pumpkins
+                    Pay with cash, check, or Venmo when we deliver your pumpkins
                   </p>
                   <div className="mt-2">
                     <span className="text-lg font-bold text-foreground">

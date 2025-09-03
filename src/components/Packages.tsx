@@ -40,12 +40,18 @@ const Packages = () => {
               
               {/* Package Image */}
               {pkg.images && pkg.images.length > 0 && (
-                <div className="relative h-64 md:h-72 overflow-hidden rounded-t-lg">
+                <div 
+                  className="relative h-72 md:h-80 lg:h-96 overflow-hidden rounded-t-lg cursor-pointer"
+                  onClick={() => handleViewPackage(pkg.id)}
+                >
                   <img 
                     src={pkg.images[0]} 
                     alt={`${pkg.name} example`}
-                    className="w-full h-full object-cover object-bottom hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover object-bottom hover:scale-105 transition-transform duration-300 select-none"
                     loading="lazy"
+                    decoding="async"
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    draggable={false}
                     onError={(e) => { e.currentTarget.src = '/placeholder.svg'; }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>

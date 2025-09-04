@@ -22,17 +22,7 @@ const About = () => {
             local farms and selected with care, and we're all about making your home feel festive, 
             warm, and uniquely you.
           </p>
-          <div className="mb-8">
-            <a
-              href="https://www.rellekepumpkinpatch.com/about-us.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary underline underline-offset-4"
-            >
-              <Leaf className="w-4 h-4" />
-              Proudly sourcing pumpkins from Relleke Farm
-            </a>
-          </div>
+      
           
           <div className="bg-primary/5 p-6 rounded-lg border border-primary/20 mb-8">
             <p className="text-lg text-foreground italic leading-relaxed text-center">

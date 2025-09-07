@@ -68,7 +68,20 @@ const Hero = () => {
       
       {/* Floating pumpkin decoration */}
       <div className="absolute bottom-10 right-10 hidden lg:block">
-        <div className="w-16 h-16 bg-primary rounded-full animate-float opacity-20"></div>
+        <div className="w-16 h-16 animate-float opacity-70">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            {/* Pumpkin body */}
+            <ellipse cx="50" cy="60" rx="35" ry="30" fill="#cc4a1a" />
+            {/* Happy face */}
+            <circle cx="42" cy="52" r="3" fill="#2d1810" />
+            <circle cx="58" cy="52" r="3" fill="#2d1810" />
+            <path d="M38 65 Q50 75 62 65" stroke="#2d1810" strokeWidth="2" fill="none" strokeLinecap="round" />
+            {/* Pumpkin stem */}
+            <rect x="47" y="25" width="6" height="15" rx="3" fill="#5a2d0c" />
+            {/* Stem detail */}
+            <ellipse cx="50" cy="27" rx="4" ry="2" fill="#6b3410" />
+          </svg>
+        </div>
       </div>
     </section>
   );

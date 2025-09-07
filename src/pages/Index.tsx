@@ -30,9 +30,9 @@ const Index = () => {
       </Helmet>
       <div className="min-h-screen">
         <Hero />
-        <About />
         <Packages />
         <ServiceArea />
+        <About />
         <Contact />
         <Footer />
       </div>

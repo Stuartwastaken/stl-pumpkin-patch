@@ -67,22 +67,46 @@ const Hero = () => {
       </div>
       
       {/* Floating pumpkin decoration */}
-      <div className="absolute bottom-10 right-10 hidden lg:block">
-        <div className="w-16 h-16 animate-float opacity-70">
-          <svg viewBox="0 0 100 100" className="w-full h-full">
-            {/* Pumpkin body */}
-            <ellipse cx="50" cy="60" rx="35" ry="30" fill="#cc4a1a" />
-            {/* Happy face */}
-            <circle cx="42" cy="52" r="3" fill="#2d1810" />
-            <circle cx="58" cy="52" r="3" fill="#2d1810" />
-            <path d="M38 65 Q50 75 62 65" stroke="#2d1810" strokeWidth="2" fill="none" strokeLinecap="round" />
-            {/* Pumpkin stem */}
-            <rect x="47" y="25" width="6" height="15" rx="3" fill="#5a2d0c" />
-            {/* Stem detail */}
-            <ellipse cx="50" cy="27" rx="4" ry="2" fill="#6b3410" />
-          </svg>
-        </div>
-      </div>
+<div className="absolute bottom-10 right-10 hidden lg:block">
+  <div className="w-20 h-20 animate-float opacity-90">
+    <svg viewBox="0 0 100 100" className="w-full h-full">
+      <defs>
+        {/* Orange gradient for pumpkin */}
+        <radialGradient id="pumpkinGradient" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#ff7a29" />
+          <stop offset="100%" stopColor="#cc4a1a" />
+        </radialGradient>
+        {/* Glow for face */}
+        <radialGradient id="faceGlow" cx="50%" cy="50%" r="70%">
+          <stop offset="0%" stopColor="#ffd966" stopOpacity="0.9" />
+          <stop offset="100%" stopColor="transparent" />
+        </radialGradient>
+      </defs>
+
+      {/* Glow background */}
+      <circle cx="50" cy="60" r="28" fill="url(#faceGlow)" />
+
+      {/* Pumpkin body with ridges */}
+      <ellipse cx="50" cy="60" rx="35" ry="30" fill="url(#pumpkinGradient)" />
+      <ellipse cx="50" cy="60" rx="28" ry="29" fill="none" stroke="#a53710" strokeWidth="2" opacity="0.5" />
+      <ellipse cx="50" cy="60" rx="20" ry="28" fill="none" stroke="#a53710" strokeWidth="2" opacity="0.5" />
+
+      {/* Pumpkin stem (curved) */}
+      <path d="M50 25 C48 15, 56 15, 54 25 Z" fill="#5a2d0c" stroke="#3d1c0a" strokeWidth="1" />
+      <path d="M52 20 Q55 15, 58 18" stroke="#3d1c0a" strokeWidth="1" fill="none" />
+
+      {/* Happy face */}
+      <circle cx="42" cy="52" r="4" fill="#2d1810" />
+      <circle cx="58" cy="52" r="4" fill="#2d1810" />
+      <path d="M38 65 Q50 78 62 65" stroke="#2d1810" strokeWidth="3" fill="none" strokeLinecap="round" />
+
+      {/* Cheek highlights */}
+      <circle cx="34" cy="58" r="3" fill="#ff9966" opacity="0.6" />
+      <circle cx="66" cy="58" r="3" fill="#ff9966" opacity="0.6" />
+    </svg>
+  </div>
+</div>
+
     </section>
   );
 };

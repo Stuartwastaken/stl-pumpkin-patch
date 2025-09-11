@@ -4,11 +4,19 @@ import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { packages } from "@/data/packages";
+import { trackEvent } from "@/lib/analytics";
+import { useState } from "react";
 
 const Packages = () => {
   const navigate = useNavigate();
+  const [expandedPackages, setExpandedPackages] = useState<Record<string, boolean>>({});
 
   const handleViewPackage = (packageId: string) => {
+    try {
+      trackEvent('view_package_click', { package_id: packageId });
+    } catch (e) {
+      // analytics unavailable
+    }
     navigate(`/packages/${packageId}`);
   };
 
@@ -66,19 +74,54 @@ const Packages = () => {
               <CardHeader>
                 <CardTitle className="font-serif text-2xl text-foreground">{pkg.name}</CardTitle>
                 <CardDescription className="text-muted-foreground">{pkg.description}</CardDescription>
-                <div className="text-3xl font-bold text-primary mt-4">{pkg.price}</div>
+                <div className="mt-2 flex flex-wrap gap-2 text-[11px]">
+                  {pkg.includes_delivery && (
+                    <span className="px-2 py-0.5 rounded bg-green-50 text-green-700 border border-green-200">Delivery included</span>
+                  )}
+                  {pkg.includes_setup ? (
+                    <span className="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">Pro styling included</span>
+                  ) : (
+                    <span className="px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200">DIY styling</span>
+                  )}
+                </div>
+                <div className="mt-4">
+                  <div className="text-3xl font-bold text-primary">{pkg.price}</div>
+                  <div className="text-sm mt-1">
+                    <span className="text-muted-foreground">Prepay with Venmo:</span>{' '}
+                    <span className="font-semibold text-green-600">
+                      ${ (pkg.priceValue * 0.9).toFixed(2) }
+                    </span>
+                    <span className="ml-2 text-xs text-green-700 bg-green-100 px-2 py-0.5 rounded">
+                      Save ${(pkg.priceValue - pkg.priceValue * 0.9).toFixed(2)}
+                    </span>
+                  </div>
+                </div>
               </CardHeader>
               
               <CardContent className="space-y-3">
-                {pkg.features.slice(0, 4).map((feature) => (
-                  <div key={feature} className="flex items-center gap-3">
-                    <Check className="w-5 h-5 text-primary flex-shrink-0" />
-                    <span className="text-sm text-foreground">{feature}</span>
-                  </div>
-                ))}
+                <div id={`features-${pkg.id}`} className="space-y-3">
+                  {(expandedPackages[pkg.id] ? pkg.features : pkg.features.slice(0, 4)).map((feature) => (
+                    <div key={feature} className="flex items-center gap-3">
+                      <Check className="w-5 h-5 text-primary flex-shrink-0" />
+                      <span className="text-sm text-foreground">{feature}</span>
+                    </div>
+                  ))}
+                </div>
                 {pkg.features.length > 4 && (
-                  <div className="text-sm text-muted-foreground">
-                    +{pkg.features.length - 4} more items...
+                  <div>
+                    <button
+                      type="button"
+                      className="text-sm text-primary hover:text-primary/80 font-medium underline underline-offset-4 px-1 py-1 rounded focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      aria-expanded={!!expandedPackages[pkg.id]}
+                      aria-controls={`features-${pkg.id}`}
+                      onClick={() =>
+                        setExpandedPackages((prev) => ({ ...prev, [pkg.id]: !prev[pkg.id] }))
+                      }
+                    >
+                      {expandedPackages[pkg.id]
+                        ? 'Show less'
+                        : `+${pkg.features.length - 4} more items...`}
+                    </button>
                   </div>
                 )}
               </CardContent>
@@ -91,6 +134,9 @@ const Packages = () => {
                 >
                   View Details
                 </Button>
+                <div className="text-[11px] text-muted-foreground text-center">
+                  No payment due today — reserve now, pay on delivery
+                </div>
               </CardFooter>
             </Card>
           ))}

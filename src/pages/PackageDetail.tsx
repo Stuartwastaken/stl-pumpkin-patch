@@ -347,6 +347,16 @@ const PackageDetail = () => {
                   )}
                 </div>
                 <p className="text-xl text-muted-foreground">{pkg.description}</p>
+                <div className="flex flex-wrap gap-2 text-xs">
+                  {pkg.includes_delivery && (
+                    <span className="px-2 py-0.5 rounded bg-green-50 text-green-700 border border-green-200">Delivery included</span>
+                  )}
+                  {pkg.includes_setup ? (
+                    <span className="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">Pro styling included</span>
+                  ) : (
+                    <span className="px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200">DIY styling</span>
+                  )}
+                </div>
                 <p className="text-lg text-foreground leading-relaxed">{pkg.longDescription}</p>
               </div>
 

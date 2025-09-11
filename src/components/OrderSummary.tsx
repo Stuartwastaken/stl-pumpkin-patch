@@ -138,19 +138,19 @@ const OrderSummary = ({
                 ) : currentTab === "overview" ? (
                   <>
                     <ShoppingCart className="w-4 h-4 mr-2" />
-                    Configure & Order
+                    Configure & Reserve
                   </>
                 ) : (
                   <>
                     <Phone className="w-4 h-4 mr-2" />
-                    Submit Order Request
+                    Submit Reservation Request
                   </>
                 )}
               </Button>
               
               <div className="text-xs text-muted-foreground text-center">
                 {pkg.includes_setup ? "Setup service included" : "DIY arrangement"} • 
-                Delivery included • {isVenmoPayment ? 'Venmo @natalieptay' : 'Cash, check, or Venmo on delivery'}
+                Delivery included • {isVenmoPayment ? 'Prepay with Venmo (save 10%)' : 'No payment due today — pay on delivery'}
               </div>
             </div>
           </>

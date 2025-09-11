@@ -331,9 +331,10 @@ const PackageConfiguration = ({ package: pkg, onConfigChange }: PackageConfigura
                   <div className="flex items-center gap-2 mb-2">
                     <DollarSign className="w-4 h-4 text-green-600" />
                     <h3 className="font-semibold text-foreground">Pay on Delivery</h3>
+                    <Badge variant="secondary" className="bg-amber-100 text-amber-900 text-xs">Buy Now, Pay Later</Badge>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Pay with cash, check, or Venmo when we deliver your pumpkins
+                    Reserve your spot today — no payment due now. Pay with cash, check, or Venmo when we deliver your pumpkins.
                   </p>
                   <div className="mt-2">
                     <span className="text-lg font-bold text-foreground">
@@ -389,6 +390,20 @@ const PackageConfiguration = ({ package: pkg, onConfigChange }: PackageConfigura
               </div>
             </div>
           </div>
+
+          {/* Delivery (Buy Now, Pay Later) Info Panel */}
+          {config.paymentMethod === 'delivery' && (
+            <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+              <div className="space-y-1 text-amber-900">
+                <p className="font-medium">Buy Now, Pay Later — how it works</p>
+                <ul className="list-disc pl-5 text-sm">
+                  <li>No payment due today — this reserves your delivery spot</li>
+                  <li>Pay at delivery by cash, check, or Venmo (@natalieptay)</li>
+                  <li>Change your delivery week anytime, subject to availability</li>
+                </ul>
+              </div>
+            </div>
+          )}
 
           {/* Venmo Payment Button */}
           {config.paymentMethod === 'venmo' && (

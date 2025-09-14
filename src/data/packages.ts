@@ -64,8 +64,8 @@ export const packages: Package[] = [
   {
     id: "full-setup-1",
     name: "Full Set Up #1",
-    price: "$715",
-    priceValue: 715,
+    price: "$699",
+    priceValue: 699,
     description: "Our most abundant porch makeover—tons of pumpkins with delivery + pro styling included.",
     longDescription: "Go all‑in on fall. This is our largest, most impressive display, designed to create a layered, photo‑ready look from every angle. We curate a beautiful mix of sizes, shapes, and colors, then handle all the heavy lifting and styling for you—maximum wow with zero effort.",
     features: [
@@ -89,8 +89,8 @@ export const packages: Package[] = [
   {
     id: "full-setup-2", 
     name: "Full Set Up #2",
-    price: "$595",
-    priceValue: 595,
+    price: "$599",
+    priceValue: 599,
     description: "Balanced, full fall look with generous variety—delivery + pro styling included.",
     longDescription: "The sweet spot for most homes. We bring a curated mix of sizes, colors, and specialty pumpkins and style them on‑site into a polished, layered display. It’s festive, substantial, and photo‑ready—without feeling over the top.",
     features: [
@@ -105,7 +105,7 @@ export const packages: Package[] = [
       "Perfect 'just right' fall vibe",
       "Pumpkins placed throughout porch and steps for layered look"
     ],
-    popular: false,
+    popular: true,
     color: "border-secondary",
     includes_setup: true,
     includes_delivery: true,
@@ -115,8 +115,8 @@ export const packages: Package[] = [
   {
     id: "full-setup-3",
     name: "Full Set Up #3", 
-    price: "$475",
-    priceValue: 475,
+    price: "$499",
+    priceValue: 499,
     description: "Small‑space friendly but still feels full—delivery + pro styling included.",
     longDescription: "Designed for smaller porches or entries, this option delivers a plentiful, well‑balanced mix styled to make the most of your space. You get that layered, high‑end fall look—just scaled to fit perfectly.",
     features: [
@@ -131,7 +131,7 @@ export const packages: Package[] = [
       "Big impact, small space",
       "Pumpkins placed throughout porch and steps for layered look"
     ],
-    popular: true,
+    popular: false,
     color: "border-primary",
     includes_setup: true,
     includes_delivery: true,
@@ -141,8 +141,8 @@ export const packages: Package[] = [
   {
     id: "diy-package-1",
     name: "DIY Package #1",
-    price: "$445",
-    priceValue: 445,
+    price: "$449",
+    priceValue: 449,
     description: "Big, bountiful mix you arrange yourself—delivery included.",
     longDescription: "A generous selection curated for impact. We handpick a beautiful variety of sizes, shapes, and colors so your porch looks full and layered. You handle the styling—everything else (including delivery) is done.",
     features: [
@@ -167,8 +167,8 @@ export const packages: Package[] = [
   {
     id: "diy-package-2",
     name: "DIY Package #2",
-    price: "$375",
-    priceValue: 375,
+    price: "$349",
+    priceValue: 349,
     description: "Generous variety without overwhelm—delivery included.",
     longDescription: "Perfect for medium porches or anyone who wants an easy, plentiful mix. Expect a curated balance of sizes and colors that looks cohesive and substantial once styled.",
     features: [
@@ -193,8 +193,8 @@ export const packages: Package[] = [
   {
     id: "diy-package-3",
     name: "DIY Package #3",
-    price: "$275",
-    priceValue: 275,
+    price: "$249",
+    priceValue: 249,
     description: "Compact set that still looks plentiful—delivery included.",
     longDescription: "Ideal for steps, stoops, and smaller spaces. A thoughtfully chosen mix that feels complete and inviting once arranged—without a trip to the patch.",
     features: [

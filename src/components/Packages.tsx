@@ -10,6 +10,7 @@ import { useState } from "react";
 const Packages = () => {
   const navigate = useNavigate();
   const [expandedPackages, setExpandedPackages] = useState<Record<string, boolean>>({});
+  const minPrice = Math.min(...packages.map((p) => p.priceValue));
 
   const handleViewPackage = (packageId: string) => {
     try {
@@ -31,6 +32,11 @@ const Packages = () => {
             Choose the perfect package for your space. All packages include fresh, locally-sourced pumpkins 
             delivered to your door. Full Set Up packages include professional styling on-site, while DIY packages let you create your own arrangement.
           </p>
+          <div className="mt-4">
+            <Badge className="bg-primary/10 text-primary border border-primary/20 px-3 py-1 text-sm">
+              From ${minPrice}
+            </Badge>
+          </div>
         </div>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -85,7 +91,7 @@ const Packages = () => {
                   )}
                 </div>
                 <div className="mt-4">
-                  <div className="text-3xl font-bold text-primary">{pkg.price}</div>
+                  <div className="text-3xl font-bold text-primary">From {pkg.price}</div>
                   <div className="text-sm mt-1">
                     <span className="text-muted-foreground">Prepay with Venmo:</span>{' '}
                     <span className="font-semibold text-green-600">

@@ -252,9 +252,12 @@ const PackageDetail = () => {
               {/* Package Header */}
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground">
-                    {pkg.name}
-                  </h1>
+                  <div>
+                    <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground">
+                      {pkg.name}
+                    </h1>
+                    <div className="mt-1 text-sm text-muted-foreground">From {pkg.price}</div>
+                  </div>
                   {pkg.popular && (
                     <Badge className="bg-primary text-primary-foreground">Most Popular</Badge>
                   )}

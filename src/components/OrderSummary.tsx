@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Phone } from "lucide-react";
+import { ShoppingCart, FileText } from "lucide-react";
 import { Package } from "@/data/packages";
 import { PackageConfig } from "./PackageConfiguration";
 
@@ -142,7 +142,7 @@ const OrderSummary = ({
                   </>
                 ) : (
                   <>
-                    <Phone className="w-4 h-4 mr-2" />
+                    <FileText className="w-4 h-4 mr-2" />
                     Submit Reservation Request
                   </>
                 )}

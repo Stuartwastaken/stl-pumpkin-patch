@@ -372,7 +372,7 @@ const PackageDetail = () => {
                       Package Examples
                     </CardTitle>
                     <CardDescription>
-                      See examples of this package in action
+                      Photos show styling inspiration and pumpkin varieties. Actual package contents and arrangement may vary based on seasonal availability and your specific delivery.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>

@@ -128,6 +128,8 @@ export const sendReminderLead = async (lead: ReminderLead): Promise<boolean> => 
       to_email: EMAIL_CONFIG.TO_EMAIL,
       to_name: EMAIL_CONFIG.TO_NAME,
       lead_email: lead.email,
+      reply_to: lead.email,
+      submitted_on: new Date().toLocaleDateString(),
       remind_on: new Date(lead.remindOnISO).toLocaleDateString(),
       remind_on_iso: lead.remindOnISO,
       source_url: lead.sourceUrl || 'unknown',

@@ -10,6 +10,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { Analytics } from "@vercel/analytics/react";
 import { useEffect } from "react";
 import { trackPageView } from "@/lib/analytics";
+import ReminderModal from "@/components/ReminderModal";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => (
           </Routes>
         </BrowserRouter>
         <Analytics />
+        <ReminderModal />
       </HelmetProvider>
     </TooltipProvider>
   </QueryClientProvider>

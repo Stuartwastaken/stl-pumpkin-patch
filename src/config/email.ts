@@ -6,6 +6,7 @@ export const EMAIL_CONFIG = {
   SERVICE_ID: 'service_qst6paw', 
   TEMPLATE_ID: 'template_7ccwxzk',  
   PUBLIC_KEY: 'z9Ay3KM0D4KNUEh_m',  
+  REMINDER_TEMPLATE_ID: 'template_reminder_lead',
   
   // Email settings
   TO_EMAIL: 'stlpumpkinsdelivery@gmail.com',

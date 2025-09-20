@@ -9,6 +9,12 @@ export interface OrderSubmission {
   totalPrice: number;
 }
 
+export interface ReminderLead {
+  email: string;
+  remindOnISO: string;
+  sourceUrl?: string;
+}
+
 export const sendOrderEmail = async (order: OrderSubmission): Promise<boolean> => {
   try {
     // Calculate add-ons details
@@ -87,7 +93,7 @@ export const sendOrderEmail = async (order: OrderSubmission): Promise<boolean> =
       // Service Details
       includes_setup: order.package.includes_setup ? 'Yes' : 'No',
       setup_time: order.package.setup_time,
-      space_required: order.package.space_required,
+  
       
       // Package Features
       package_features: order.package.features.join(', ')
@@ -115,3 +121,28 @@ export const sendOrderEmail = async (order: OrderSubmission): Promise<boolean> =
 export const initializeEmailJS = () => {
   emailjs.init(EMAIL_CONFIG.PUBLIC_KEY);
 }; 
+
+export const sendReminderLead = async (lead: ReminderLead): Promise<boolean> => {
+  try {
+    const params = {
+      to_email: EMAIL_CONFIG.TO_EMAIL,
+      to_name: EMAIL_CONFIG.TO_NAME,
+      lead_email: lead.email,
+      remind_on: new Date(lead.remindOnISO).toLocaleDateString(),
+      remind_on_iso: lead.remindOnISO,
+      source_url: lead.sourceUrl || 'unknown',
+    };
+
+    const result = await emailjs.send(
+      EMAIL_CONFIG.SERVICE_ID,
+      EMAIL_CONFIG.REMINDER_TEMPLATE_ID || EMAIL_CONFIG.TEMPLATE_ID,
+      params,
+      EMAIL_CONFIG.PUBLIC_KEY
+    );
+    console.log('Reminder lead sent:', result);
+    return true;
+  } catch (e) {
+    console.error('Failed to send reminder lead:', e);
+    return false;
+  }
+};
